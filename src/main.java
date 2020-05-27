@@ -16,6 +16,7 @@ public class main {
 		
 		GraphSolver g = new GraphSolver(s);
 		g.printGraph();
+		g.printPaths();
 		
 	}
 
