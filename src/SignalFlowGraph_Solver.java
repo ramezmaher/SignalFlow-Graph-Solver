@@ -2,16 +2,29 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
+import java.awt.Graphics;
+
 import javax.swing.SwingConstants;
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JButton;
+import javax.swing.JToggleButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class SignalFlowGraph_Solver {
 
 	private JFrame frame;
-
+	private int Type=0;
+	private int X1,X2,Y1,Y2,node1,node2;
+	boolean makingEdge=false;
+	private Engine eng = new Engine();
+	
 	/**
 	 * Launch the application.
 	 */
@@ -39,6 +52,8 @@ public class SignalFlowGraph_Solver {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		JToggleButton edgeBtn = new JToggleButton("Edge");
+		JToggleButton nodeBtn = new JToggleButton("Node");
 		frame = new JFrame();
 		frame.setBounds(100, 100, 950, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,20 +66,74 @@ public class SignalFlowGraph_Solver {
 		frame.getContentPane().add(lblSignalFlowGraph);
 		
 		JPanel panel = new JPanel();
+		panel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Graphics canvas = panel.getGraphics();
+				X1=e.getX();
+				Y1=e.getY();
+				if(Type == 1) {
+					eng.newNode(canvas, X1, Y1);
+					eng.refresh();
+					panel.paintComponents(canvas);
+				}
+			}
+			
+			public void mousePressed(MouseEvent e) {
+				X1=e.getX();
+				Y1=e.getY();
+				if(Type == 2) {
+					node1=eng.ThisNode(X1, Y1);
+					if(node1 >= 0) {
+						makingEdge=true;
+					}
+			}
+			}
+			
+			public void mouseReleased(MouseEvent e) {
+				Graphics canvas = panel.getGraphics();
+				X2=e.getX();
+				Y2=e.getY();
+				if(makingEdge && Type==2 ) {
+					node2=eng.ThisNode(X1, Y1);
+					if(node2 >= 0) {
+						String s=JOptionPane.showInputDialog("Insert relation between nodes");
+						eng.newEdge(canvas, X1, Y1, X2, Y2, node1, node2, s);
+						eng.refresh();
+						panel.paintComponents(canvas);
+					}
+				}
+			}
+			
+		});
 		panel.setBackground(Color.WHITE);
 		panel.setBounds(42, 150, 850, 322);
 		frame.getContentPane().add(panel);
 		
-		JButton btnNode = new JButton("Node");
-		btnNode.setBounds(201, 112, 97, 25);
-		frame.getContentPane().add(btnNode);
-		
-		JButton btnEdge = new JButton("Edge");
-		btnEdge.setBounds(629, 112, 97, 25);
-		frame.getContentPane().add(btnEdge);
-		
 		JButton btnSolve = new JButton("Solve");
-		btnSolve.setBounds(417, 112, 97, 25);
+		btnSolve.setBounds(795, 112, 97, 25);
 		frame.getContentPane().add(btnSolve);
+		
+		nodeBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				nodeBtn.setEnabled(false);
+				edgeBtn.setEnabled(true);
+				Type = 1;
+			}
+		});
+		nodeBtn.setBounds(42, 112, 137, 25);
+		frame.getContentPane().add(nodeBtn);
+		
+		edgeBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				edgeBtn.setEnabled(false);
+				nodeBtn.setEnabled(true);
+				Type  = 2;
+			}
+		});
+		edgeBtn.setBounds(190, 112, 137, 25);
+		frame.getContentPane().add(edgeBtn);
 	}
+	
+	
 }
