@@ -1,5 +1,5 @@
-import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 
 public class DrawNode implements DrawShapes {
 	
@@ -33,6 +33,16 @@ public class DrawNode implements DrawShapes {
 	@Override
 	public int getType() {
 		return 1;
+	}
+
+	@Override
+	public Point getPoints() {
+	    throw new IllegalAccessError("This methods only works with edges");
+	}
+
+	@Override
+	public String getWeight() {
+		throw new IllegalAccessError("This methods only works with edges");
 	}
 	
 

@@ -28,11 +28,19 @@ public class DrawEdge implements DrawShapes {
 	}
 	@Override
 	public boolean isInside(int x, int y) {
-		return false;
+		throw new IllegalAccessError("This methods only works with nodes");
 	}
 	@Override
 	public int getID() {
-		return -1;
+		throw new IllegalAccessError("This methods only works with nodes");
+	}
+	@Override
+	public Point getPoints() {
+		return p;
+	}
+	@Override
+	public String getWeight() {
+		return weight;
 	}
 
 }

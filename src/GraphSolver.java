@@ -133,4 +133,8 @@ public class GraphSolver {
     		System.out.println(s);
     }
     
+    public String solveGraph() {
+    	return "Hello";
+    }
+    
 }

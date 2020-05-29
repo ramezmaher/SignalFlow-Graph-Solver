@@ -16,14 +16,17 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JTextField;
 
 public class SignalFlowGraph_Solver {
 
 	private JFrame frame;
 	private int Type=0;
 	private int X1,X2,Y1,Y2,node1,node2;
-	boolean makingEdge=false;
+	private boolean makingEdge=false;
+	private boolean newDraw=false;
 	private Engine eng = new Engine();
+	private JTextField textField;
 	
 	/**
 	 * Launch the application.
@@ -54,6 +57,7 @@ public class SignalFlowGraph_Solver {
 	private void initialize() {
 		JToggleButton edgeBtn = new JToggleButton("Edge");
 		JToggleButton nodeBtn = new JToggleButton("Node");
+		textField = new JTextField();
 		frame = new JFrame();
 		frame.setBounds(100, 100, 950, 700);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,6 +73,10 @@ public class SignalFlowGraph_Solver {
 		panel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if(newDraw) {
+					panel.repaint();
+					newDraw=false;
+				}
 				Graphics canvas = panel.getGraphics();
 				X1=e.getX();
 				Y1=e.getY();
@@ -80,6 +88,10 @@ public class SignalFlowGraph_Solver {
 			}
 			
 			public void mousePressed(MouseEvent e) {
+				if(newDraw) {
+					panel.repaint();
+					newDraw=false;
+				}
 				X1=e.getX();
 				Y1=e.getY();
 				if(Type == 2) {
@@ -91,6 +103,10 @@ public class SignalFlowGraph_Solver {
 			}
 			
 			public void mouseReleased(MouseEvent e) {
+				if(newDraw) {
+					panel.repaint();
+					newDraw=false;
+				}
 				Graphics canvas = panel.getGraphics();
 				X2=e.getX();
 				Y2=e.getY();
@@ -101,6 +117,7 @@ public class SignalFlowGraph_Solver {
 						eng.newEdge(canvas, X1, Y1, X2, Y2, node1, node2, s);
 						eng.refresh();
 						panel.paintComponents(canvas);
+						makingEdge=false;
 					}
 				}
 			}
@@ -111,6 +128,19 @@ public class SignalFlowGraph_Solver {
 		frame.getContentPane().add(panel);
 		
 		JButton btnSolve = new JButton("Solve");
+		btnSolve.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(!eng.isEmpty()) {
+				String s = eng.solve();
+				textField.setText(s);
+				Type=0;
+				edgeBtn.setEnabled(true);
+				nodeBtn.setEnabled(true);
+				eng.clear();
+				newDraw=true;
+				}
+			}
+		});
 		btnSolve.setBounds(795, 112, 97, 25);
 		frame.getContentPane().add(btnSolve);
 		
@@ -133,7 +163,16 @@ public class SignalFlowGraph_Solver {
 		});
 		edgeBtn.setBounds(190, 112, 137, 25);
 		frame.getContentPane().add(edgeBtn);
+		
+		
+		textField.setBounds(190, 520, 702, 62);
+		frame.getContentPane().add(textField);
+		textField.setColumns(10);
+		
+		JLabel lblAnswer = new JLabel("Answer");
+		lblAnswer.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 18));
+		lblAnswer.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAnswer.setBounds(42, 534, 114, 25);
+		frame.getContentPane().add(lblAnswer);
 	}
-	
-	
 }

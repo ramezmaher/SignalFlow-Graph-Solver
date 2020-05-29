@@ -34,4 +34,30 @@ public class Engine {
 		return -1;
 	}
 	
+	public boolean isEmpty() {
+		return shapesArr.isEmpty();
+	}
+	
+	public String solve() {
+		String[][] str = new String[NumberOfNodes][NumberOfNodes];
+		
+		for(int i=0;i<NumberOfNodes;i++) {
+			for(int j=0;j<NumberOfNodes;j++) {
+				str[i][j]=null;
+			}
+		}
+		
+		for(DrawShapes d: shapesArr) {
+			if(d.getType()==0) {
+				Point p=d.getPoints();
+				str[p.x][p.y] = d.getWeight();
+			}
+		}
+		
+		GraphSolver g = new GraphSolver(str);
+		String s = new String();
+		s=g.solveGraph();
+		return s;
+	}
+	
 }
