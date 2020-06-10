@@ -1,6 +1,6 @@
 
 public class main {
-
+	/*This class is used only for testing and does do any changes in the functionality of the project*/
 	public static void main(String[] args) {
 		int l = 7;
 		String[][] s = new String[l][l];
@@ -28,7 +28,13 @@ public class main {
 		System.out.println(" ");
 		System.out.println("loops");
 		System.out.println(" ");
-		g.printloops();
+		g.printNums();
+		System.out.println(" ");
+		System.out.println("non touching loops");
+		System.out.println(" ");
+		g.printNoTLoop();
+		
+		
 		
 	}
 }
